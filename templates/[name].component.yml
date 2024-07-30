@@ -1,0 +1,13 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json
+name: My React App
+status: stable
+props:
+  type: object
+  properties:
+    attributes:
+      type: "Drupal\Core\Template\Attribute"
+libraryOverrides:
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/drupalSettings
