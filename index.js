@@ -18,10 +18,12 @@ function vitePluginDrupalSdcGenerator({ directory: _directory } = {}) {
         }
         if (bundle[fileName].isEntry) {
           const { name } = bundle[fileName];
-          const files = readdirSync(directory);
+          const templateDirectory =
+            typeof directory === 'object' ? directory[name] : directory;
+          const files = readdirSync(templateDirectory);
 
           files.forEach((file) => {
-            const source = readFileSync(join(directory, file), 'utf8');
+            const source = readFileSync(join(templateDirectory, file), 'utf8');
 
             let emittedFile = {
               type: 'asset',

@@ -6,6 +6,11 @@ props:
   properties:
     attributes:
       type: "Drupal\Core\Template\Attribute"
+    id:
+      type: string
+      description: "The unique identifier for the component."
+      required: true
+      default: app
 libraryOverrides:
   dependencies:
     - core/drupal
