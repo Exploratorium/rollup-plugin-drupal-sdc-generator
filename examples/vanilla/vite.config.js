@@ -1,17 +1,13 @@
+import commonjs from '@rollup/plugin-commonjs';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { join } from 'node:path';
+import injectProcessEnv from 'rollup-plugin-inject-process-env';
 
 import { defineConfig } from 'vite';
-import vitePluginDrupalSdcGenerator from 'vite-plugin-drupal-sdc-generator'
+import rollupPluginDrupalSdcGenerator from 'rollup-plugin-drupal-sdc-generator'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vitePluginDrupalSdcGenerator({
-      directory: {
-        'my-component': 'vite/my-component',
-      },
-    }),
-  ],
   root: 'js',
   build: {
     outDir: join('..', 'components', 'my-component'),
@@ -23,6 +19,19 @@ export default defineConfig({
         entryFileNames: '[name].js',
         assetFileNames: '[name].[ext]',
       },
+      plugins: [
+        injectProcessEnv({
+          // eslint-disable-next-line no-undef
+          NODE_ENV: process.env.NODE_ENV,
+        }),
+        nodeResolve(),
+        commonjs(),
+        rollupPluginDrupalSdcGenerator({
+          directory: {
+            'my-component': 'vite/my-component',
+          },
+        }),
+      ],
     },
   },
 });

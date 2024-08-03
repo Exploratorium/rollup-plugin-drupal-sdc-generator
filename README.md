@@ -7,19 +7,19 @@ for embedding your app in a [Drupal](https://www.drupal.org) module or theme.
 ## Installation
 
 ```shell
-npm install --save-dev vite-plugin-drupal-sdc-generator
+npm install --save-dev rollup-plugin-drupal-sdc-generator
 ```
 
 ## Usage
 
 ```javascript
 import { defineConfig } from 'vite'
-import vitePluginDrupalInterfaceTranslations from 'vite-plugin-react-drupal-interface-translations'
+import rollupPluginDrupalSdcGenerator from 'vite-plugin-react-drupal-interface-translations'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vitePluginDrupalInterfaceTranslations(),
+    rollupPluginDrupalSdcGenerator(),
   ],
   root: 'js',
   build: {
@@ -38,7 +38,7 @@ Type
 : `string | object = { "{component-name}": string }`
 
 Default
-: `"node_modules/vite-plugin-drupal-sdc-generator/templates"`
+: `"node_modules/rollup-plugin-drupal-sdc-generator/templates"`
 
 The directory where your SDC's `{component-name}.component.yml`,
 `{component-name}.twig`, and other files that will be included
@@ -51,9 +51,9 @@ When an object is provided, the templates in the directory passed in are used
 for the component names specified by the object's keys.
 
 ```javascript
-vitePluginDrupalSdcGenerator({ directory: 'vite/shared'})
+rollupPluginDrupalSdcGenerator({ directory: 'vite/shared'})
 
-vitePluginDrupalSdcGenerator({
+rollupPluginDrupalSdcGenerator({
   directory: {
     'my-component': 'vite/my-component',
   }

@@ -1,23 +1,30 @@
 import { readdirSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-function vitePluginDrupalSdcGenerator({ directory: _directory } = {}) {
+function rollupPluginDrupalSdcGenerator({ directory: _directory } = {}) {
   // eslint-disable-next-line no-undef
   const directory = _directory || join(__dirname, 'templates');
 
   return {
-    name: 'vite-plugin-drupal-sdc-generator',
+    name: 'rollup-plugin-drupal-sdc-generator',
     generateBundle(options, bundle) {
       for (const fileName in bundle) {
-        if (bundle[fileName].type !== 'chunk') {
+        const { isEntry, name, type } = bundle[fileName];
+
+        if (fileName === 'style.css') {
+          bundle[fileName].fileName = `${basename(options.dir)}.css`;
           continue;
         }
-        if (bundle[fileName].isEntry) {
-          const { name } = bundle[fileName];
+
+        if (type !== 'chunk') {
+          continue;
+        }
+
+        if (isEntry) {
           const templateDirectory =
             typeof directory === 'object' ? directory[name] : directory;
           const files = readdirSync(templateDirectory);
@@ -38,4 +45,4 @@ function vitePluginDrupalSdcGenerator({ directory: _directory } = {}) {
   };
 }
 
-export default vitePluginDrupalSdcGenerator;
+export default rollupPluginDrupalSdcGenerator;
