@@ -40,8 +40,8 @@ Type
 Default
 : `"node_modules/rollup-plugin-drupal-sdc-generator/templates"`
 
-The directory where your SDC's `{component-name}.component.yml`,
-`{component-name}.twig`, and other files that will be included
+The directory where your SDC's `[{component-name}].component.yml`,
+`[{component-name}].twig`, and other files that will be included
 with the built single directory component.
 
 When a string is provided, the templates in the directory passed in are used
@@ -49,6 +49,10 @@ on all generated single directory components.
 
 When an object is provided, the templates in the directory passed in are used
 for the component names specified by the object's keys.
+
+In your templates, `[name]` will be replaced with the value
+of `{component-name}` too. Use `\[name\]` if you want the string `[name]`
+included verbatim.
 
 ```javascript
 rollupPluginDrupalSdcGenerator({ directory: 'vite/shared'})

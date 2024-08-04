@@ -5,9 +5,13 @@ props:
   type: object
   properties:
     attributes:
-      type: "Drupal\Core\Template\Attribute"
+      type: Drupal\Core\Template\Attribute
 libraryOverrides:
   dependencies:
     - core/drupal
     - core/once
     - core/drupalSettings
+  js:
+    # `[[name]]` will be replaced with the value "[name]".
+    # Use `[[[name]]]` if you want the string `[[name]]` included verbatim.
+    '[name].js': { attributes: { defer: true, type: "module" } }
