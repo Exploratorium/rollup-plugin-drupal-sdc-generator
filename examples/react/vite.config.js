@@ -1,8 +1,8 @@
 import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite'
-import rollupPluginDrupalSdcGenerator from 'rollup-plugin-drupal-sdc-generator'
+import { defineConfig } from 'vite';
+import rollupPluginDrupalSdcGenerator from 'rollup-plugin-drupal-sdc-generator';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
 
 // https://vitejs.dev/config/
@@ -32,7 +32,6 @@ export default defineConfig({
       entry: {
         'my-component': 'src/main.jsx',
       },
-
-    }
+    },
   },
-})
+});
