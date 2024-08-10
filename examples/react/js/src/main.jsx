@@ -4,6 +4,7 @@ import App from './App.jsx';
 import './index.css';
 
 let container;
+// eslint-disable-next-line no-undef
 if (process.env.NODE_ENV === 'development') {
   container = document.getElementById('root');
 } else {

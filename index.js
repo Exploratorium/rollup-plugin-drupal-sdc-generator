@@ -31,7 +31,7 @@ function rollupPluginDrupalSdcGenerator({ directory: _directory } = {}) {
           files.forEach((file) => {
             const source = readFileSync(join(templateDirectory, file), 'utf8');
 
-            let emittedFile = {
+            const emittedFile = {
               type: 'asset',
               fileName: join(dirname(fileName), file.replace('[name]', name)),
               source: source
