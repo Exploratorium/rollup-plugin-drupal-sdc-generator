@@ -6,7 +6,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 function rollupPluginDrupalSdcGenerator({ directory: _directory } = {}) {
-  // eslint-disable-next-line no-undef
   const directory = _directory || join(__dirname, 'templates');
 
   return {
