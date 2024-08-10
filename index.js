@@ -35,7 +35,9 @@ function rollupPluginDrupalSdcGenerator({ directory: _directory } = {}) {
             let emittedFile = {
               type: 'asset',
               fileName: join(dirname(fileName), file.replace('[name]', name)),
-              source: source.replaceAll(/(?<!\[)\[name](?!])/g, name).replaceAll(/\[\[name]]/g, '[name]'),
+              source: source
+                .replaceAll(/(?<!\[)\[name](?!])/g, name)
+                .replaceAll(/\[\[name]]/g, '[name]'),
             };
             this.emitFile(emittedFile);
           });
