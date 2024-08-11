@@ -28,7 +28,7 @@ export default {
           src: 'templates/**/*',
           dest: 'dist/templates',
         },
-      ]
+      ],
     }),
   ],
 };
