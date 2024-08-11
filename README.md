@@ -1,6 +1,6 @@
 # Rollup Plugin for Drupal to Generate Single Directory Components (SDCs)
 
-This is a [vite](https://vitejs.dev) plugin that creates
+This is a [Rollup](https://rollupjs.org) plugin that creates
 [single directory components](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components)
 for embedding your app in a [Drupal](https://www.drupal.org) module or theme.
 
@@ -13,8 +13,20 @@ npm install --save-dev rollup-plugin-drupal-sdc-generator
 ## Usage
 
 ```javascript
+import drupalInterfaceTranslations from 'rollup-plugin-drupal-interface-translations';
+
+// https://rollupjs.org/configuration-options/
+export default {
+  input: 'main.js',
+  plugins: [drupalInterfaceTranslations()],
+};
+```
+
+This plugin can be used with [Vite](https://vitejs.dev).
+
+```javascript
 import { defineConfig } from 'vite';
-import rollupPluginDrupalSdcGenerator from 'rollup-plugin-drupal-sdc-generator';
+import drupalSdcGenerator from 'rollup-plugin-drupal-sdc-generator';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -22,8 +34,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: 'js/main.js',
+      plugins: [drupalSdcGenerator()],
     },
-    plugins: [rollupPluginDrupalSdcGenerator()],
   },
 });
 ```
@@ -53,9 +65,9 @@ of `{component-name}` too. Use `\[name\]` if you want the string `[name]`
 included verbatim.
 
 ```javascript
-rollupPluginDrupalSdcGenerator({ directory: 'vite/shared' });
+drupalSdcGenerator({ directory: 'vite/shared' });
 
-rollupPluginDrupalSdcGenerator({
+drupalSdcGenerator({
   directory: {
     'my-component': 'vite/my-component',
   },

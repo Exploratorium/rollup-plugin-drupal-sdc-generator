@@ -2,7 +2,7 @@ import { join } from 'node:path';
 
 import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import rollupPluginDrupalSdcGenerator from 'rollup-plugin-drupal-sdc-generator';
+import drupalSdcGenerator from 'rollup-plugin-drupal-sdc-generator';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
 import { defineConfig } from 'vite';
 
@@ -26,7 +26,7 @@ export default defineConfig({
         }),
         nodeResolve(),
         commonjs(),
-        rollupPluginDrupalSdcGenerator({
+        drupalSdcGenerator({
           directory: {
             'my-component': 'vite/my-component',
           },
