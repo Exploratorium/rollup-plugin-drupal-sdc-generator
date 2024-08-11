@@ -13,12 +13,12 @@ npm install --save-dev rollup-plugin-drupal-sdc-generator
 ## Usage
 
 ```javascript
-import rollupPluginDrupalInterfaceTranslations from 'rollup-plugin-drupal-interface-translations';
+import drupalInterfaceTranslations from 'rollup-plugin-drupal-interface-translations';
 
 // https://rollupjs.org/configuration-options/
 export default {
   input: 'main.js',
-  plugins: [rollupPluginDrupalInterfaceTranslations()],
+  plugins: [drupalInterfaceTranslations()],
 };
 ```
 
@@ -26,7 +26,7 @@ This plugin can be used with [Vite](https://vitejs.dev).
 
 ```javascript
 import { defineConfig } from 'vite';
-import rollupPluginDrupalSdcGenerator from 'rollup-plugin-drupal-sdc-generator';
+import drupalSdcGenerator from 'rollup-plugin-drupal-sdc-generator';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -34,7 +34,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: 'js/main.js',
-      plugins: [rollupPluginDrupalSdcGenerator()],
+      plugins: [drupalSdcGenerator()],
     },
   },
 });
@@ -65,9 +65,9 @@ of `{component-name}` too. Use `\[name\]` if you want the string `[name]`
 included verbatim.
 
 ```javascript
-rollupPluginDrupalSdcGenerator({ directory: 'vite/shared' });
+drupalSdcGenerator({ directory: 'vite/shared' });
 
-rollupPluginDrupalSdcGenerator({
+drupalSdcGenerator({
   directory: {
     'my-component': 'vite/my-component',
   },

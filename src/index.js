@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const FILE_PATH = fileURLToPath(import.meta.url);
 const DIRECTORY_NAME = dirname(FILE_PATH);
 
-function rollupPluginDrupalSdcGenerator({ directory: _directory } = {}) {
+function drupalSdcGenerator({ directory: _directory } = {}) {
   const directory = _directory || join(DIRECTORY_NAME, 'templates');
 
   return {
@@ -46,4 +46,4 @@ function rollupPluginDrupalSdcGenerator({ directory: _directory } = {}) {
   };
 }
 
-export default rollupPluginDrupalSdcGenerator;
+export default drupalSdcGenerator;
