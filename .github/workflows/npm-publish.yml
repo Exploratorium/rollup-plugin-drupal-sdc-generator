@@ -26,6 +26,8 @@ jobs:
         run: |
           git config user.email "webmaster@exploratorium.edu"
           git config user.name "the Exploratorium"
+      - name: Remove examples
+        run: rm -rf examples
       - name: Install dependencies
         run: npm ci
       - name: Increment version

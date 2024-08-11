@@ -2,11 +2,11 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const FILE_PATH = fileURLToPath(import.meta.url);
+const DIRECTORY_NAME = dirname(FILE_PATH);
 
 function rollupPluginDrupalSdcGenerator({ directory: _directory } = {}) {
-  const directory = _directory || join(__dirname, 'templates');
+  const directory = _directory || join(DIRECTORY_NAME, 'templates');
 
   return {
     name: 'rollup-plugin-drupal-sdc-generator',

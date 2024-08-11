@@ -1,6 +1,6 @@
 # Rollup Plugin for Drupal to Generate Single Directory Components (SDCs)
 
-This is a [vite](https://vitejs.dev) plugin that creates
+This is a [Rollup](https://rollupjs.org) plugin that creates
 [single directory components](https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components)
 for embedding your app in a [Drupal](https://www.drupal.org) module or theme.
 
@@ -13,6 +13,18 @@ npm install --save-dev rollup-plugin-drupal-sdc-generator
 ## Usage
 
 ```javascript
+import rollupPluginDrupalInterfaceTranslations from 'rollup-plugin-drupal-interface-translations';
+
+// https://rollupjs.org/configuration-options/
+export default {
+  input: 'main.js',
+  plugins: [rollupPluginDrupalInterfaceTranslations()],
+};
+```
+
+This plugin can be used with [Vite](https://vitejs.dev).
+
+```javascript
 import { defineConfig } from 'vite';
 import rollupPluginDrupalSdcGenerator from 'rollup-plugin-drupal-sdc-generator';
 
@@ -22,8 +34,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: 'js/main.js',
+      plugins: [rollupPluginDrupalSdcGenerator()],
     },
-    plugins: [rollupPluginDrupalSdcGenerator()],
   },
 });
 ```
