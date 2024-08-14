@@ -13,7 +13,7 @@ If this is a bug:
 If this is a feature request:
 
 1. Describe the feature.
-2. Provide a user story. (As a ___, I need ___ so that I can ___.)
+2. Provide a user story. (As a \_\_\_, I need \_\_\_ so that I can \_\_\_.)
 3. Describe the benefits of the feature.
 
 ## Submitting Patches
@@ -25,4 +25,3 @@ When you submit a patch, please:
 3. If possible, please provide functional tests.
 
 ## Development Environment Setup
-
