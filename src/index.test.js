@@ -41,39 +41,6 @@ describe('drupalSdcGenerator', () => {
 });
 
 describe('examples', () => {
-  const beforeEachGroup = (group) => {
-    beforeEach(async () => {
-      await new Promise((resolve, reject) => {
-        exec(`npm install && npm run build`, (error) => {
-          if (error) {
-            reject(error);
-          }
-          resolve();
-        });
-      });
-
-      const nodeModules = `examples/${group}/node_modules`;
-      try {
-        await stat(nodeModules);
-        await rm(nodeModules, { recursive: true });
-      } catch (error) {
-        if (error.code !== 'ENOENT') {
-          throw error;
-        }
-      }
-
-      const packageLock = `examples/${group}/package-lock.json`;
-      try {
-        await stat(nodeModules);
-        await rm(packageLock);
-      } catch (error) {
-        if (error.code !== 'ENOENT') {
-          throw error;
-        }
-      }
-    });
-  };
-
   const testCanBuild = (group) => {
     test(`can build the "${group}" example`, async () => {
       await new Promise((resolve, reject) => {
@@ -100,16 +67,41 @@ describe('examples', () => {
       const yamlFilePath = `${sdc}/my-component.component.yml`;
       const content = await readFile(yamlFilePath, 'utf8');
       expect(content).toMatch(/\n\s*name:\s+My Component\n/);
-    });
+    }, 10_000);
   };
 
-  describe('react', () => {
-    beforeEachGroup('react');
-    testCanBuild('react');
+  beforeAll(async () => {
+    await new Promise((resolve, reject) => {
+      exec(`npm install && npm run build`, (error) => {
+        if (error) {
+          reject(error);
+        }
+        resolve();
+      });
+    });
+
+    for (const group in ['react', 'vanilla']) {
+      const nodeModules = `examples/${group}/node_modules`;
+      try {
+        await stat(nodeModules);
+        await rm(nodeModules, { recursive: true, force: true });
+      } catch (error) {
+        if (error.code !== 'ENOENT') {
+          throw error;
+        }
+      }
+
+      const packageLock = `examples/${group}/package-lock.json`;
+      try {
+        await stat(packageLock);
+        await rm(packageLock);
+      } catch (error) {
+        if (error.code !== 'ENOENT') {
+          throw error;
+        }
+      }
+    }
   });
 
-  describe('vanilla', () => {
-    beforeEachGroup('vanilla');
-    testCanBuild('vanilla');
-  });
+  ['react', 'vanilla'].forEach(testCanBuild);
 });
