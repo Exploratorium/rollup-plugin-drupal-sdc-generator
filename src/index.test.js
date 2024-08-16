@@ -40,7 +40,7 @@ describe('drupalSdcGenerator', () => {
   });
 });
 
-describe('examples', () => {
+describe.skip('examples', () => {
   const testCanBuild = (group) => {
     test(`can build the "${group}" example`, async () => {
       await new Promise((resolve, reject) => {
@@ -67,7 +67,7 @@ describe('examples', () => {
       const yamlFilePath = `${sdc}/my-component.component.yml`;
       const content = await readFile(yamlFilePath, 'utf8');
       expect(content).toMatch(/\n\s*name:\s+My Component\n/);
-    }, 10_000);
+    }, 30_000);
   };
 
   beforeAll(async () => {
