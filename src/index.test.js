@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals';
+import { describe, expect, test } from '@jest/globals';
 
 import drupalSdcGenerator from './index.js';
 
