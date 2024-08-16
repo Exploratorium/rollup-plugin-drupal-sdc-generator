@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { readdir, readFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -6,11 +6,11 @@ const FILE_PATH = fileURLToPath(import.meta.url);
 const DIRECTORY_NAME = dirname(FILE_PATH);
 
 function drupalSdcGenerator({ directory: _directory } = {}) {
-  const directory = _directory || join(DIRECTORY_NAME, 'templates');
+  const directory = _directory || join(DIRECTORY_NAME, '../templates');
 
   return {
     name: 'rollup-plugin-drupal-sdc-generator',
-    generateBundle(options, bundle) {
+    async generateBundle(options, bundle) {
       for (const fileName in bundle) {
         const { isEntry, name, type } = bundle[fileName];
 
@@ -19,28 +19,39 @@ function drupalSdcGenerator({ directory: _directory } = {}) {
           continue;
         }
 
-        if (type !== 'chunk') {
+        if (type !== 'chunk' || !isEntry) {
           continue;
         }
 
-        if (isEntry) {
-          const templateDirectory =
-            typeof directory === 'object' ? directory[name] : directory;
-          const files = readdirSync(templateDirectory);
+        const templateDirectory =
+          typeof directory === 'object' ? directory[name] : directory;
+        const files = await readdir(templateDirectory);
 
-          files.forEach((file) => {
-            const source = readFileSync(join(templateDirectory, file), 'utf8');
+        return Promise.all(
+          files.map(async (file) => {
+            const source = await readFile(
+              join(templateDirectory, file),
+              'utf8',
+            );
+
+            const emittedFileName = join(
+              dirname(fileName),
+              file.replace('[name]', name),
+            );
+
+            const emittedSource = source
+              .replaceAll(/(?<!\[)\[name](?!])/g, name)
+              .replaceAll(/\[\[name]]/g, '[name]');
 
             const emittedFile = {
               type: 'asset',
-              fileName: join(dirname(fileName), file.replace('[name]', name)),
-              source: source
-                .replaceAll(/(?<!\[)\[name](?!])/g, name)
-                .replaceAll(/\[\[name]]/g, '[name]'),
+              fileName: emittedFileName,
+              source: emittedSource,
             };
+
             this.emitFile(emittedFile);
-          });
-        }
+          }),
+        );
       }
     },
   };
