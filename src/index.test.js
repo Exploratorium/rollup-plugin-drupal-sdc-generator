@@ -28,14 +28,12 @@ describe('drupalSdcGenerator', () => {
     expect(instance).toHaveProperty('name');
   });
 
-  test('generates a bundle', async () => {
-    instance.emitFile = jest.fn();
+  ['baz.component.yml', 'baz.twig'].forEach((fileName) => {
+    test(`generateBundle emits ${fileName}`, async () => {
+      instance.emitFile = jest.fn();
 
-    await instance.generateBundle(options, bundle);
+      await instance.generateBundle(options, bundle);
 
-    expect(instance.emitFile).toHaveBeenCalledTimes(2);
-
-    ['baz.component.yml', 'baz.twig'].forEach((fileName) => {
       expect(instance.emitFile).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'asset',
@@ -46,8 +44,8 @@ describe('drupalSdcGenerator', () => {
     });
   });
 
-  test('writeBundle renames style.css to [name].css', () => {
-    instance.writeBundle(options, bundle);
+  test('generateBundle renames style.css to {component_name}.css', async () => {
+    await instance.generateBundle(options, bundle);
 
     expect(bundle['style.css'].fileName).toEqual('baz.css');
   });
