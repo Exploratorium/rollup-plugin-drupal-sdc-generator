@@ -12,6 +12,7 @@ describe('drupalSdcGenerator', () => {
 
   test('generates a bundle', async () => {
     const instance = {
+      // eslint-disable-next-line no-undef
       ...console,
       debug: () => {},
       ...drupalSdcGenerator(),
@@ -19,13 +20,16 @@ describe('drupalSdcGenerator', () => {
     instance.emitFile = jest.fn();
 
     const options = {
-      // eslint-disable-next-line no-undef
-      dir: process.cwd(),
+      dir: 'baz',
     };
 
     const bundle = {
       'baz.js': { isEntry: true, name: 'baz', type: 'chunk' },
-      'styles.css': { isEntry: undefined, name: 'styles.css', type: 'asset' },
+      'style.css': {
+        isEntry: undefined,
+        name: 'style.css',
+        type: 'asset',
+      },
     };
 
     await instance.generateBundle(options, bundle);
@@ -41,5 +45,7 @@ describe('drupalSdcGenerator', () => {
         }),
       );
     });
+
+    expect(bundle['style.css'].fileName).toEqual('baz.css');
   });
 });
