@@ -11,15 +11,14 @@ function drupalSdcGenerator({ directory: _directory } = {}) {
   return {
     name: 'rollup-plugin-drupal-sdc-generator',
     async generateBundle(options, bundle) {
-      for (const fileName in bundle) {
-        const { isEntry, name, type } = bundle[fileName];
-
-        if (fileName === 'style.css') {
-          bundle[fileName].fileName = `${basename(options.dir)}.css`;
-          continue;
-        }
+      for (const bundleId in bundle) {
+        const { isEntry, name, fileName, type } = bundle[bundleId];
+        this.debug(
+          `Working on ${bundleId} isEntry=${isEntry}, name=${name}, fileName=${fileName}, type=${type}`,
+        );
 
         if (type !== 'chunk' || !isEntry) {
+          this.debug({ message: `Skipping ${bundleId}` });
           continue;
         }
 
@@ -27,17 +26,15 @@ function drupalSdcGenerator({ directory: _directory } = {}) {
           typeof directory === 'object' ? directory[name] : directory;
         const files = await readdir(templateDirectory);
 
-        return Promise.all(
+        await Promise.all(
           files.map(async (file) => {
             const source = await readFile(
               join(templateDirectory, file),
               'utf8',
             );
 
-            const emittedFileName = join(
-              dirname(fileName),
-              file.replace('[name]', name),
-            );
+            const emittedFileName = file.replace('[name]', name);
+            this.debug(`emitted filename is ${emittedFileName}`);
 
             const emittedSource = source
               .replaceAll(/(?<!\[)\[name](?!])/g, name)
@@ -49,9 +46,22 @@ function drupalSdcGenerator({ directory: _directory } = {}) {
               source: emittedSource,
             };
 
+            this.debug({
+              message: `Emitting ${bundleId} => ${emittedFile.fileName}`,
+            });
             this.emitFile(emittedFile);
           }),
         );
+      }
+    },
+    writeBundle(options, bundle) {
+      if (Object.hasOwn(bundle, 'style.css')) {
+        const bundleId = 'style.css';
+        const cssFileName = basename(options.dir);
+        this.debug({
+          message: `Renaming ${bundleId} to ${cssFileName}.css`,
+        });
+        bundle[bundleId].fileName = `${cssFileName}.css`;
       }
     },
   };

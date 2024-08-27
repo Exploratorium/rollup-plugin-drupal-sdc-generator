@@ -4,23 +4,32 @@ import { describe, expect, test } from '@jest/globals';
 import drupalSdcGenerator from './index.js';
 
 describe('drupalSdcGenerator', () => {
+  const instance = {
+    // eslint-disable-next-line no-undef
+    ...console,
+    debug: () => {},
+    ...drupalSdcGenerator(),
+  };
+
+  const options = {
+    dir: 'baz',
+  };
+
+  const bundle = {
+    'baz.js': { isEntry: true, name: 'baz', type: 'chunk' },
+    'style.css': {
+      isEntry: undefined,
+      name: 'style.css',
+      type: 'asset',
+    },
+  };
+
   test('plugin has a name', () => {
-    const instance = drupalSdcGenerator();
     expect(instance).toHaveProperty('name');
   });
 
   test('generates a bundle', async () => {
-    const instance = drupalSdcGenerator();
     instance.emitFile = jest.fn();
-
-    const options = {
-      // eslint-disable-next-line no-undef
-      dir: process.cwd(),
-    };
-
-    const bundle = {
-      'baz.js': { isEntry: true, name: 'baz', type: 'chunk' },
-    };
 
     await instance.generateBundle(options, bundle);
 
@@ -35,5 +44,11 @@ describe('drupalSdcGenerator', () => {
         }),
       );
     });
+  });
+
+  test('writeBundle renames style.css to [name].css', () => {
+    instance.writeBundle(options, bundle);
+
+    expect(bundle['style.css'].fileName).toEqual('baz.css');
   });
 });
