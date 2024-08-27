@@ -17,15 +17,6 @@ function drupalSdcGenerator({ directory: _directory } = {}) {
           `Working on ${bundleId} isEntry=${isEntry}, name=${name}, fileName=${fileName}, type=${type}`,
         );
 
-        if (bundleId === 'style.css') {
-          const cssFileName = basename(options.dir);
-          this.debug({
-            message: `Renaming ${bundleId} to ${cssFileName}.css`,
-          });
-          bundle[bundleId].fileName = `${cssFileName}.css`;
-          continue;
-        }
-
         if (type !== 'chunk' || !isEntry) {
           this.debug({ message: `Skipping ${bundleId}` });
           continue;
@@ -42,10 +33,8 @@ function drupalSdcGenerator({ directory: _directory } = {}) {
               'utf8',
             );
 
-            const emittedFileName = join(
-              dirname(bundleId),
-              file.replace('[name]', name),
-            );
+            const emittedFileName = file.replace('[name]', name);
+            this.debug(`emitted filename is ${emittedFileName}`);
 
             const emittedSource = source
               .replaceAll(/(?<!\[)\[name](?!])/g, name)
@@ -63,6 +52,16 @@ function drupalSdcGenerator({ directory: _directory } = {}) {
             this.emitFile(emittedFile);
           }),
         );
+      }
+    },
+    writeBundle(options, bundle) {
+      if (Object.hasOwn(bundle, 'style.css')) {
+        const bundleId = 'style.css';
+        const cssFileName = basename(options.dir);
+        this.debug({
+          message: `Renaming ${bundleId} to ${cssFileName}.css`,
+        });
+        bundle[bundleId].fileName = `${cssFileName}.css`;
       }
     },
   };
