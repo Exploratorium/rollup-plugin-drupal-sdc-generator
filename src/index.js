@@ -13,13 +13,20 @@ function drupalSdcGenerator({ directory: _directory } = {}) {
     async generateBundle(options, bundle) {
       for (const fileName in bundle) {
         const { isEntry, name, type } = bundle[fileName];
+        this.debug(
+          `Working on ${fileName} isEntry=${isEntry}, name=${name}, type=${type}`,
+        );
 
         if (fileName === 'style.css') {
+          this.debug({
+            message: `Renaming ${fileName} to ${basename(options.dir)}.css`,
+          });
           bundle[fileName].fileName = `${basename(options.dir)}.css`;
           continue;
         }
 
         if (type !== 'chunk' || !isEntry) {
+          this.debug({ message: `Skipping ${fileName}` });
           continue;
         }
 
@@ -27,7 +34,7 @@ function drupalSdcGenerator({ directory: _directory } = {}) {
           typeof directory === 'object' ? directory[name] : directory;
         const files = await readdir(templateDirectory);
 
-        return Promise.all(
+        await Promise.all(
           files.map(async (file) => {
             const source = await readFile(
               join(templateDirectory, file),
@@ -49,6 +56,9 @@ function drupalSdcGenerator({ directory: _directory } = {}) {
               source: emittedSource,
             };
 
+            this.debug({
+              message: `Emitting ${fileName} => ${emittedFile.fileName}`,
+            });
             this.emitFile(emittedFile);
           }),
         );

@@ -6,11 +6,16 @@ import drupalSdcGenerator from './index.js';
 describe('drupalSdcGenerator', () => {
   test('plugin has a name', () => {
     const instance = drupalSdcGenerator();
+
     expect(instance).toHaveProperty('name');
   });
 
   test('generates a bundle', async () => {
-    const instance = drupalSdcGenerator();
+    const instance = {
+      ...console,
+      debug: () => {},
+      ...drupalSdcGenerator(),
+    };
     instance.emitFile = jest.fn();
 
     const options = {
@@ -20,6 +25,7 @@ describe('drupalSdcGenerator', () => {
 
     const bundle = {
       'baz.js': { isEntry: true, name: 'baz', type: 'chunk' },
+      'styles.css': { isEntry: undefined, name: 'styles.css', type: 'asset' },
     };
 
     await instance.generateBundle(options, bundle);
