@@ -1,3 +1,5 @@
+import { jest } from '@jest/globals';
+
 import drupalSdcGenerator from './index.js';
 
 describe('drupalSdcGenerator', () => {

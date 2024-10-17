@@ -55,6 +55,7 @@ export default [
       globals: {
         ...eslintPluginJest.environments.globals.globals,
         ...globals.jest,
+        jest: 'off',
       },
     },
   },
