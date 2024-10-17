@@ -1,11 +1,9 @@
 import { jest } from '@jest/globals';
-import { describe, expect, test } from '@jest/globals';
 
 import drupalSdcGenerator from './index.js';
 
 describe('drupalSdcGenerator', () => {
   const instance = {
-    // eslint-disable-next-line no-undef
     ...console,
     debug: () => {},
     ...drupalSdcGenerator(),
