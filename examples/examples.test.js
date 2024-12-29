@@ -67,7 +67,7 @@ describe('examples', () => {
       test(`can build the "${group}" example`, async () => {
         await new Promise((resolve, reject) => {
           exec(
-            `cd examples/${group} && npm install && npm run build`,
+            `cd examples/${group} && npm install && npm run build -- --emptyOutDir`,
             (error) => {
               if (error) {
                 reject(error);
