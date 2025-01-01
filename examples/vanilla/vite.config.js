@@ -1,7 +1,5 @@
 import { join } from 'node:path';
 
-import commonjs from '@rollup/plugin-commonjs';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
 import drupalSdcGenerator from 'rollup-plugin-drupal-sdc-generator';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
 import { defineConfig } from 'vite';
@@ -24,8 +22,6 @@ export default defineConfig({
           // eslint-disable-next-line no-undef
           NODE_ENV: process.env.NODE_ENV,
         }),
-        nodeResolve(),
-        commonjs(),
         drupalSdcGenerator({
           directory: {
             'my-component': 'vite/my-component',
