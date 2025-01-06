@@ -3,9 +3,6 @@ name: My Component
 status: stable
 props:
   type: object
-  properties:
-    attributes:
-      type: Drupal\Core\Template\Attribute
 libraryOverrides:
   dependencies:
     - core/drupal
