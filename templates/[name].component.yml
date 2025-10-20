@@ -3,12 +3,13 @@ name: My Component
 status: stable
 props:
   type: object
+  properties: {}
 libraryOverrides:
-  dependencies:
-    - core/drupal
-    - core/once
-    - core/drupalSettings
   js:
     # `[[name]]` will be replaced with the value "[name]".
     # Use `[[[name]]]` if you want the string `[[name]]` included verbatim.
     '[name].js': { attributes: { defer: true, type: "module" } }
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/drupalSettings
