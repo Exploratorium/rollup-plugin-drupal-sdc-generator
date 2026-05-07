@@ -11,11 +11,6 @@ export default {
       format: 'cjs',
     },
     {
-      name: 'rollup-plugin-drupal-sdc-generator',
-      file: 'dist/index.js',
-      format: 'umd',
-    },
-    {
       file: 'dist/index.mjs',
       format: 'es',
     },
