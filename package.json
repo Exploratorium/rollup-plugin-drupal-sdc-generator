@@ -5,6 +5,9 @@
     "import": "./dist/index.mjs",
     "require": "./dist/index.cjs"
   },
+  "bin": {
+    "drupal-sdc-eject": "./bin/eject.js"
+  },
   "name": "rollup-plugin-drupal-sdc-generator",
   "author": {
     "name": "the Exploratorium",
@@ -43,6 +46,9 @@
   },
   "type": "module",
   "license": "MIT",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
+  },
   "scripts": {
     "build": "rollup -c",
     "build:dev": "rollup -c --sourcemap",
@@ -50,8 +56,7 @@
     "lint:fix": "eslint --fix .",
     "prettier": "prettier .",
     "prettier:fix": "prettier --write .",
-    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest --config jest.config.cjs",
-    "eject": "node scripts/eject.js"
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest --config jest.config.cjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

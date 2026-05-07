@@ -15,11 +15,11 @@ npm install --save-dev rollup-plugin-drupal-sdc-generator
 Copy the default templates into your project so you can customize them:
 
 ```shell
-# Copy templates into the current directory
-npm explore rollup-plugin-drupal-sdc-generator -- npm run eject
+# Copy templates to a directory relative to your current location
+npx drupal-sdc-eject ./vite
 
-# Copy templates into a relative or absolute path
-npm explore rollup-plugin-drupal-sdc-generator -- npm run eject -- path/to/templates
+# Copy to a different path
+npx drupal-sdc-eject ../custom-templates
 ```
 
 Then point the `directory` option at the copied templates (see [Options](#options)).
