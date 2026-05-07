@@ -47,6 +47,14 @@ export default [
     },
   },
   {
+    files: ['scripts/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
     files: ['src/**/*.test.js'],
     plugins: {
       jest: eslintPluginJest,

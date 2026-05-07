@@ -2,10 +2,15 @@ import { readdir, readFile } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { parseDocument, stringify, visit } from 'yaml';
+
 const FILE_PATH = fileURLToPath(import.meta.url);
 const DIRECTORY_NAME = dirname(FILE_PATH);
 
-function drupalSdcGenerator({ directory: _directory } = {}) {
+function drupalSdcGenerator({
+  directory: _directory,
+  label: _label = 'My Component',
+} = {}) {
   const directory = _directory || join(DIRECTORY_NAME, '../templates');
 
   return {
@@ -35,6 +40,8 @@ function drupalSdcGenerator({ directory: _directory } = {}) {
           typeof directory === 'object' ? directory[name] : directory;
         const files = await readdir(templateDirectory);
 
+        const label = typeof _label === 'object' ? _label[name] : _label;
+
         await Promise.all(
           files.map(async (file) => {
             const source = await readFile(
@@ -45,9 +52,48 @@ function drupalSdcGenerator({ directory: _directory } = {}) {
             const emittedFileName = file.replace('[name]', name);
             this.debug(`emitted filename is ${emittedFileName}`);
 
-            const emittedSource = source
-              .replaceAll(/(?<!\[)\[name](?!])/g, name)
-              .replaceAll(/\[\[name]]/g, '[name]');
+            const vars = { name, label };
+
+            const reducer = (acc, key) => {
+              return acc
+                .replaceAll(
+                  new RegExp(`(?<!\\[)\\[${key}](?!])`, 'g'),
+                  vars[key],
+                )
+                .replaceAll(new RegExp(`\\[\\[${key}\\]]`, 'g'), `[${key}]`);
+            };
+
+            const sourceDoc = parseDocument(source);
+
+            const applyVars = (str) => Object.keys(vars).reduce(reducer, str);
+            const processComments = (node) => {
+              if (!node) return;
+              if (node.commentBefore != null) {
+                node.commentBefore = applyVars(node.commentBefore);
+              }
+              if (node.comment != null) {
+                node.comment = applyVars(node.comment);
+              }
+            };
+
+            visit(sourceDoc, {
+              Pair(_, pair) {
+                if (pair.key) {
+                  processComments(pair.key);
+                  if (typeof pair.key.value === 'string') {
+                    pair.key.value = applyVars(pair.key.value);
+                  }
+                }
+                if (pair.value) {
+                  processComments(pair.value);
+                  if (typeof pair.value.value === 'string') {
+                    pair.value.value = applyVars(pair.value.value);
+                  }
+                }
+              },
+            });
+
+            const emittedSource = stringify(sourceDoc);
 
             const emittedFile = {
               type: 'asset',
