@@ -10,10 +10,25 @@ for embedding your app in a [Drupal](https://www.drupal.org) module or theme.
 npm install --save-dev rollup-plugin-drupal-sdc-generator
 ```
 
+## Ejecting templates
+
+Copy the default templates into your project so you can customize them:
+
+```shell
+# Copy templates into the current directory
+npm explore rollup-plugin-drupal-sdc-generator -- npm run eject
+
+# Copy templates into a specific directory
+npm explore rollup-plugin-drupal-sdc-generator -- npm run eject -- "$INIT_CWD/path/to/templates"
+```
+
+Then point the `directory` option at the copied templates (see [Options](#options)).
+
 ## Usage
 
 ```javascript
-import drupalInterfaceTranslations from 'rollup-plugin-drupal-interface-translations';
+import drupalInterfaceTranslations
+  from 'rollup-plugin-drupal-interface-translations';
 
 // https://rollupjs.org/configuration-options/
 export default {
@@ -51,8 +66,8 @@ Default
 : `"node_modules/rollup-plugin-drupal-sdc-generator/templates"`
 
 The directory where your SDC's `[{component-name}].component.yml`,
-`[{component-name}].twig`, and other files that will be included
-with the built single directory component.
+`[{component-name}].twig`, and other files that will be included with the built
+single directory component.
 
 When a string is provided, the templates in the directory passed in are used
 on all generated single directory components.
@@ -60,9 +75,9 @@ on all generated single directory components.
 When an object is provided, the templates in the directory passed in are used
 for the component names specified by the object's keys.
 
-In your templates, `[name]` will be replaced with the value
-of `{component-name}` too. Use `\[name\]` if you want the string `[name]`
-included verbatim.
+In your templates, `[name]` will be replaced with the value of
+`{component-name}`, too. Use `[[name]]` if you want the string `[name]` included
+verbatim.
 
 ```javascript
 drupalSdcGenerator({ directory: 'vite/shared' });
@@ -74,8 +89,32 @@ drupalSdcGenerator({
 });
 ```
 
+### label
+
+Type
+: `string | object = { "{component-name}": string }`
+
+Default
+: `"My Component"`
+
+This is a descriptive name for your SDC.
+
+In your templates, `[label]` will be replaced with the value of this variable.
+Use `[[label]]` if you want the string `[label]` included verbatim.
+
+```javascript
+drupalSdcGenerator({ label: 'Best SDC ever!' });
+
+drupalSdcGenerator({
+  label: {
+    'my-component': 'Best SDC ever!',
+  },
+});
+```
+
 ---
 
-The Exploratorium is a 501(c)(3) nonprofit organization. Our tax ID #: 94-1696494
+The Exploratorium is a 501(c)(3) nonprofit organization. Our tax ID #:
+94-1696494
 
 https://www.exploratorium.edu
