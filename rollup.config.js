@@ -4,15 +4,11 @@ import copy from 'rollup-plugin-copy';
 
 export default {
   input: 'src/index.js',
+  external: ['node:fs/promises', 'node:path', 'node:url', 'yaml'],
   output: [
     {
       file: 'dist/index.cjs',
       format: 'cjs',
-    },
-    {
-      name: 'rollup-plugin-drupal-sdc-generator',
-      file: 'dist/index.js',
-      format: 'umd',
     },
     {
       file: 'dist/index.mjs',
