@@ -2,7 +2,7 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "engines": {
-    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
+    "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
   },
   "exports": {
     "import": "./dist/index.mjs",
@@ -43,15 +43,12 @@
     "drupal"
   ],
   "private": false,
-  "version": "1.2.7",
+  "version": "1.2.8",
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
   "type": "module",
   "license": "MIT",
-  "engines": {
-    "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
-  },
   "scripts": {
     "build": "rollup -c",
     "build:dev": "rollup -c --sourcemap",
