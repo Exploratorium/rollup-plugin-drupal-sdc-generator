@@ -111,6 +111,29 @@ drupalSdcGenerator({
 });
 ```
 
+### group
+
+Type
+: `string | object = { "{component-name}": string }`
+
+Default
+: `undefined`
+
+This is the group that your SDC belongs to in Drupal's component organization.
+
+When provided, a `group` field will be added to your component's metadata.
+
+```javascript
+drupalSdcGenerator({ group: 'Navigation' });
+
+drupalSdcGenerator({
+  group: {
+    'my-component': 'Navigation',
+    'other-component': 'Content',
+  },
+});
+```
+
 ---
 
 The Exploratorium is a 501(c)(3) nonprofit organization. Our tax ID #:

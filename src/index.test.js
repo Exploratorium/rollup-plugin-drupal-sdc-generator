@@ -295,6 +295,114 @@ describe('drupalSdcGenerator', () => {
     });
   });
 
+  describe('group option', () => {
+    test('does not add group field when group option is not provided', async () => {
+      const instance = {
+        ...console,
+        debug: () => {},
+        emitFile: jest.fn(),
+        ...drupalSdcGenerator(),
+      };
+
+      await instance.generateBundle(options, bundle);
+
+      const ymlCall = instance.emitFile.mock.calls.find((call) =>
+        call[0].fileName.includes('.component.yml'),
+      );
+      expect(ymlCall[0].source).not.toMatch(/\ngroup:/);
+    });
+
+    test('adds group field when group is a string', async () => {
+      const customGroup = 'Navigation';
+      const instance = {
+        ...console,
+        debug: () => {},
+        emitFile: jest.fn(),
+        ...drupalSdcGenerator({ group: customGroup }),
+      };
+
+      await instance.generateBundle(options, bundle);
+
+      const ymlCall = instance.emitFile.mock.calls.find((call) =>
+        call[0].fileName.includes('.component.yml'),
+      );
+      expect(ymlCall[0].source).toMatch(/\ngroup: Navigation/);
+    });
+
+    test('uses component-specific group when group is an object', async () => {
+      const groupMap = {
+        baz: 'Content',
+        foo: 'Navigation',
+      };
+      const instance = {
+        ...console,
+        debug: () => {},
+        emitFile: jest.fn(),
+        ...drupalSdcGenerator({ group: groupMap }),
+      };
+
+      await instance.generateBundle(options, bundle);
+
+      const ymlCall = instance.emitFile.mock.calls.find((call) =>
+        call[0].fileName.includes('.component.yml'),
+      );
+      expect(ymlCall[0].source).toMatch(/\ngroup: Content/);
+    });
+
+    test('handles multiple components with different groups', async () => {
+      const groupMap = {
+        baz: 'Content',
+        qux: 'Navigation',
+      };
+      const multiBundle = {
+        'baz.js': { isEntry: true, name: 'baz', type: 'chunk' },
+        'qux.js': { isEntry: true, name: 'qux', type: 'chunk' },
+      };
+      const instance = {
+        ...console,
+        debug: () => {},
+        emitFile: jest.fn(),
+        ...drupalSdcGenerator({ group: groupMap }),
+      };
+
+      await instance.generateBundle(options, multiBundle);
+
+      const calls = instance.emitFile.mock.calls;
+      const bazYmlCall = calls.find(
+        (call) =>
+          call[0].fileName === 'baz.component.yml' &&
+          call[0].source.includes('group: Content'),
+      );
+      const quxYmlCall = calls.find(
+        (call) =>
+          call[0].fileName === 'qux.component.yml' &&
+          call[0].source.includes('group: Navigation'),
+      );
+
+      expect(bazYmlCall).toBeDefined();
+      expect(quxYmlCall).toBeDefined();
+    });
+
+    test('does not add group field when component name is not in group object', async () => {
+      const groupMap = {
+        foo: 'Navigation',
+      };
+      const instance = {
+        ...console,
+        debug: () => {},
+        emitFile: jest.fn(),
+        ...drupalSdcGenerator({ group: groupMap }),
+      };
+
+      await instance.generateBundle(options, bundle);
+
+      const ymlCall = instance.emitFile.mock.calls.find((call) =>
+        call[0].fileName.includes('.component.yml'),
+      );
+      expect(ymlCall[0].source).not.toMatch(/\ngroup:/);
+    });
+  });
+
   describe('combined directory and label options', () => {
     test('directory and label are independent - string values', async () => {
       const instance = {
@@ -379,6 +487,90 @@ describe('drupalSdcGenerator', () => {
       expect(ymlCall[0].source).toMatch(/Component Specific Label/);
       // Verify it's using the default template structure
       expect(ymlCall[0].source).toMatch(/baz\.js/);
+    });
+  });
+
+  describe('combined group, label, and directory options', () => {
+    test('group, label, and directory are independent - string values', async () => {
+      const instance = {
+        ...console,
+        debug: () => {},
+        emitFile: jest.fn(),
+        ...drupalSdcGenerator({
+          directory: 'templates',
+          label: 'Custom Label',
+          group: 'Navigation',
+        }),
+      };
+
+      await instance.generateBundle(options, bundle);
+
+      const ymlCall = instance.emitFile.mock.calls.find((call) =>
+        call[0].fileName.includes('.component.yml'),
+      );
+
+      // Should use custom label
+      expect(ymlCall[0].source).toMatch(/Custom Label/);
+      // Should add group field
+      expect(ymlCall[0].source).toMatch(/\ngroup: Navigation/);
+    });
+
+    test('group, label, and directory are independent - object values', async () => {
+      const directoryMap = {
+        baz: 'templates',
+      };
+      const labelMap = {
+        baz: 'Baz Custom Label',
+      };
+      const groupMap = {
+        baz: 'Content',
+      };
+      const instance = {
+        ...console,
+        debug: () => {},
+        emitFile: jest.fn(),
+        ...drupalSdcGenerator({
+          directory: directoryMap,
+          label: labelMap,
+          group: groupMap,
+        }),
+      };
+
+      await instance.generateBundle(options, bundle);
+
+      const ymlCall = instance.emitFile.mock.calls.find((call) =>
+        call[0].fileName.includes('.component.yml'),
+      );
+
+      // Should use component-specific label
+      expect(ymlCall[0].source).toMatch(/Baz Custom Label/);
+      // Should use component-specific group
+      expect(ymlCall[0].source).toMatch(/\ngroup: Content/);
+    });
+
+    test('can mix string and object types for group and label', async () => {
+      const instance = {
+        ...console,
+        debug: () => {},
+        emitFile: jest.fn(),
+        ...drupalSdcGenerator({
+          label: 'Universal Label', // string for all
+          group: {
+            baz: 'Component Specific Group',
+          }, // object for specific
+        }),
+      };
+
+      await instance.generateBundle(options, bundle);
+
+      const ymlCall = instance.emitFile.mock.calls.find((call) =>
+        call[0].fileName.includes('.component.yml'),
+      );
+
+      // Should use string label
+      expect(ymlCall[0].source).toMatch(/Universal Label/);
+      // Should use component-specific group
+      expect(ymlCall[0].source).toMatch(/\ngroup: Component Specific Group/);
     });
   });
 });
