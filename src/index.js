@@ -12,6 +12,7 @@ function drupalSdcGenerator({
   label: _label = 'My Component',
 } = {}) {
   const directory = _directory || join(DIRECTORY_NAME, '../templates');
+  const label = _label || 'My Component';
 
   return {
     name: 'rollup-plugin-drupal-sdc-generator',
@@ -40,7 +41,7 @@ function drupalSdcGenerator({
           typeof directory === 'object' ? directory[name] : directory;
         const files = await readdir(templateDirectory);
 
-        const label = typeof _label === 'object' ? _label[name] : _label;
+        const templateLabel = typeof label === 'object' ? label[name] : label;
 
         await Promise.all(
           files.map(async (file) => {
@@ -52,7 +53,7 @@ function drupalSdcGenerator({
             const emittedFileName = file.replace('[name]', name);
             this.debug(`emitted filename is ${emittedFileName}`);
 
-            const vars = { name, label };
+            const vars = { name, label: templateLabel };
 
             const reducer = (acc, key) => {
               return acc
