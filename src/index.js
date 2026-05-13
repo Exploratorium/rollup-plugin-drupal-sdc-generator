@@ -9,6 +9,7 @@ const DIRECTORY_NAME = dirname(FILE_PATH);
 
 function drupalSdcGenerator({
   directory: _directory,
+  group,
   label: _label = 'My Component',
 } = {}) {
   const directory = _directory || join(DIRECTORY_NAME, '../templates');
@@ -42,6 +43,7 @@ function drupalSdcGenerator({
         const files = await readdir(templateDirectory);
 
         const templateLabel = typeof label === 'object' ? label[name] : label;
+        const templateGroup = typeof group === 'object' ? group[name] : group;
 
         await Promise.all(
           files.map(async (file) => {
@@ -65,6 +67,14 @@ function drupalSdcGenerator({
             };
 
             const sourceDoc = parseDocument(source);
+
+            if (
+              templateGroup &&
+              sourceDoc.contents &&
+              sourceDoc.contents.items
+            ) {
+              sourceDoc.add(sourceDoc.createPair('group', templateGroup));
+            }
 
             const applyVars = (str) => Object.keys(vars).reduce(reducer, str);
             const processComments = (node) => {
