@@ -1,6 +1,9 @@
 {
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
+  },
   "exports": {
     "import": "./dist/index.mjs",
     "require": "./dist/index.cjs"
