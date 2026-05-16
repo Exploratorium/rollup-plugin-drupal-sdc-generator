@@ -72,7 +72,7 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^17.6.0",
     "jest": "^30.3.0",
-    "lefthook": "^1.12.3",
+    "lefthook": "^2.1.6",
     "prettier": "^3.6.2",
     "rollup": "^4.52.5",
     "rollup-plugin-copy": "^3.5.0"
